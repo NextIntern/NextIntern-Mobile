@@ -1,6 +1,7 @@
-// lib/screen/auth_screen.dart
+// lib/screens/auth_screen.dart
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'package:nextintern_mobile/widgets/bottom_navbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -11,6 +12,14 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   bool _isPasswordVisible = false;
+
+  Future<void> _login() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => BottomNavbar()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,23 +118,14 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          const Color(0xFF6200EA), // updated background color
+                      backgroundColor: const Color(0xFF6200EA),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       minimumSize: const Size(double.infinity, 0),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const HomeScreen(
-                            title: 'Flutter Demo Home Page',
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: _login,
                     child: const Text(
                       'Sign In',
                       style: TextStyle(fontSize: 16, color: Colors.white),
