@@ -1,8 +1,8 @@
 // lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
+import 'package:nextintern_mobile/services/criteria_service.dart';
 import 'package:nextintern_mobile/widgets/custom_app_bar.dart';
 import 'package:nextintern_mobile/models/criteria_model.dart';
-import 'package:nextintern_mobile/services/api_handler.dart';
 import 'package:nextintern_mobile/widgets/criteria_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _criteriaListFuture = ApiHandler.getAllCriteria();
+    _criteriaListFuture = CriteriaService.getAllCriteria();
   }
 
   @override

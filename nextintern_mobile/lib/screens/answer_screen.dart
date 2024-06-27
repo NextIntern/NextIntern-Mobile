@@ -41,12 +41,29 @@ class _AnswerScreenState extends State<AnswerScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Handle the answer submission logic here
-                print('Answer submitted: ${_answerController.text}');
-              },
-              child: const Text('Submit Answer'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Handle the answer submission logic here
+                    print('Answer submitted: ${_answerController.text}');
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green.shade500),
+                  child: const Text(
+                    'Submit Answer',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    _answerController.clear();
+                  },
+                  child: const Text('Clear'),
+                ),
+              ],
             ),
           ],
         ),

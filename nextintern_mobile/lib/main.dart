@@ -21,10 +21,17 @@ class MyApp extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            return snapshot.data == true ? const BottomNavbar() : const AuthScreen();
+            return snapshot.data == true
+                ? const BottomNavbar()
+                : const AuthScreen();
           }
         },
       ),
     );
+  }
+
+  Future<bool> checkLoginStatus() async {
+    String? token = await AuthService.getToken();
+    return token != null;
   }
 }

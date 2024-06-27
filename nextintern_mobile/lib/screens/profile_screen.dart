@@ -1,10 +1,7 @@
-// lib/screens/profile_screen.dart
 import 'package:flutter/material.dart';
+import 'package:nextintern_mobile/services/profile_service.dart';
 import 'package:nextintern_mobile/widgets/custom_app_bar.dart';
 import 'package:nextintern_mobile/models/profile_model.dart';
-import 'package:nextintern_mobile/services/api_handler.dart';
-import 'package:nextintern_mobile/services/auth_service.dart';
-import 'package:nextintern_mobile/screens/auth_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -19,16 +16,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _profileFuture = ApiHandler.getProfile();
+    _profileFuture = ProfileService.getProfile();
   }
 
-  void _logout() async {
-    await saveLoginStatus(false);
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => AuthScreen()),
-      (Route<dynamic> route) => false,
-    );
-  }
+  // void _logout() async {
+  //   await saveLoginStatus(false);
+  //   Navigator.of(context).pushAndRemoveUntil(
+  //     MaterialPageRoute(builder: (context) => AuthScreen()),
+  //     (Route<dynamic> route) => false,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -61,34 +58,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildInfoItem('Skills', profile.skills ?? 'N/A'),
                   _buildInfoItem('Languages', profile.languages ?? 'N/A'),
                   SizedBox(height: 30),
-                  Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Color(0xFF08F8B3), Color(0xFF4B39EF)],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 50, vertical: 15),
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                        onPressed: _logout,
-                        child: Text(
-                          'Logout',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Center(
+                  //   child: Container(
+                  //     decoration: BoxDecoration(
+                  //       gradient: LinearGradient(
+                  //         colors: [Color(0xFF08F8B3), Color(0xFF4B39EF)],
+                  //         begin: Alignment.centerLeft,
+                  //         end: Alignment.centerRight,
+                  //       ),
+                  //       borderRadius: BorderRadius.circular(30),
+                  //     ),
+                  //     child: ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         padding: EdgeInsets.symmetric(
+                  //             horizontal: 50, vertical: 15),
+                  //         backgroundColor: Colors.transparent,
+                  //         shadowColor: Colors.transparent,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius: BorderRadius.circular(30),
+                  //         ),
+                  //       ),
+                  //       onPressed: _logout,
+                  //       child: Text(
+                  //         'Logout',
+                  //         style: TextStyle(fontSize: 18, color: Colors.white),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             );

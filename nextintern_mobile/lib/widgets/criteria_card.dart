@@ -10,22 +10,22 @@ class CriteriaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               criteria.criteria ?? 'No Criteria',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
                 'Evaluate from Mentor: ${criteria.evaluateFromMentor ?? 'N/A'}'),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text('Started: ${criteria.start == true ? 'Yes' : 'No'}'),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text('Checked: ${criteria.isChecked == true ? 'Yes' : 'No'}'),
           ],
         ),

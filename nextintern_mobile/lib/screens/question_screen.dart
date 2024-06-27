@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nextintern_mobile/models/question_model.dart';
-import 'package:nextintern_mobile/services/api_handler.dart';
+import 'package:nextintern_mobile/services/question_service.dart';
 import 'package:nextintern_mobile/widgets/custom_app_bar.dart'; // Replace with the actual path to ApiHandler
 import 'package:nextintern_mobile/widgets/question_cart.dart'; // Replace with the actual path to QuestionWidget
 
@@ -17,7 +17,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
   @override
   void initState() {
     super.initState();
-    _questionListFuture = ApiHandler.getAllQuestions();
+    _questionListFuture = QuestionService.getAllQuestions();
   }
 
   @override

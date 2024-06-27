@@ -1,7 +1,6 @@
-// lib/screens/auth_screen.dart
 import 'package:flutter/material.dart';
+import 'package:nextintern_mobile/services/auth_service.dart';
 import 'package:nextintern_mobile/widgets/bottom_navbar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -12,12 +11,62 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   bool _isPasswordVisible = false;
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    String? token = await AuthService.getToken();
+    if (token != null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => BottomNavbar()),
+      );
+    }
+  }
 
   Future<void> _login() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true);
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => BottomNavbar()),
+    try {
+      var response = await AuthService.login(
+        _usernameController.text,
+        _passwordController.text,
+      );
+
+      if (response.token?.accessToken != null) {
+        String token = response.token!.accessToken!;
+        await AuthService.saveToken(token);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => BottomNavbar()),
+        );
+      } else {
+        _showErrorDialog('Invalid login response');
+      }
+    } catch (e) {
+      _showErrorDialog('Login failed: $e');
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -80,6 +129,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   const SizedBox(height: 30),
                   TextField(
+                    controller: _usernameController,
                     decoration: InputDecoration(
                       hintText: 'Email',
                       filled: true,
@@ -92,6 +142,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   const SizedBox(height: 20),
                   TextField(
+                    controller: _passwordController,
                     obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
                       hintText: 'Password',
