@@ -29,6 +29,15 @@ class _AnswerScreenState extends State<AnswerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.answer != null ? 'Edit Answer' : 'Answer Question'),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF08F8B3), Color(0xFF4B39EF)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -38,20 +47,26 @@ class _AnswerScreenState extends State<AnswerScreen> {
             Text(
               widget.question.question ?? 'No Question Text',
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             TextField(
               controller: _answerController,
               maxLines: 5,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 labelText: 'Your Answer',
+                alignLabelWithHint: true,
+                filled: true,
+                fillColor: Colors.grey.shade200,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -66,17 +81,40 @@ class _AnswerScreenState extends State<AnswerScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green.shade500,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: Text(widget.answer != null
-                      ? 'Update Answer'
-                      : 'Submit Answer'),
+                  child: Text(
+                    widget.answer != null ? 'Update Answer' : 'Submit Answer',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 16),
                 ElevatedButton(
                   onPressed: () {
                     _answerController.clear();
                   },
-                  child: const Text('Clear'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red.shade400,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Clear',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ],
             ),

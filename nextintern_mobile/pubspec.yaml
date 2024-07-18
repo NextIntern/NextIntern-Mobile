@@ -52,6 +52,7 @@ dev_dependencies:
   shared_preferences: ^2.0.9
   connectivity_plus: ^3.0.2
   flutter_local_notifications: ^9.9.1
+  intl: ^0.17.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -66,7 +67,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/logo.png
-  #   - images/a_dot_ham.jpeg
+    - assets/profile_picture.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -76,8 +76,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           CircleAvatar(
             radius: 50,
-            backgroundImage: AssetImage(
+            // Sử dụng Image.asset với BoxFit.cover
+            backgroundImage: const AssetImage(
                 'assets/profile_picture.png'), // Thay thế bằng đường dẫn tới ảnh đại diện của bạn
+            backgroundColor: Colors.transparent,
           ),
           const SizedBox(height: 10),
           Text(
@@ -101,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: ListTile(
-        leading: Icon(icon, color: Theme.of(context).primaryColor),
+        leading: Icon(icon, color: const Color(0xFF4B39EF)),
         title: Text(
           label,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
