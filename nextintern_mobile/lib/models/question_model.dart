@@ -1,16 +1,26 @@
 class QuestionModel {
-  String? questionsId;
-  String? questions;
+  String? campaignQuestionId;
+  String? campaignId;
+  String? question;
+  String? createDate;
+  String? modifyDate;
   bool? status;
-  String? id;
 
-  QuestionModel({this.questionsId, this.questions, this.status, this.id});
+  QuestionModel({
+    this.campaignQuestionId,
+    this.campaignId,
+    this.question,
+    this.createDate,
+    this.modifyDate,
+    this.status,
+  });
 
   QuestionModel.fromJson(Map<String, dynamic> json) {
-    questionsId = json['questionsId'];
-    questions = json['questions'];
-    status = json['status'];
-    id = json['id'];
+    campaignQuestionId = json['campaignQuestionId'];
+    campaignId = json['campaignId'];
+    question = json['question'];
+    createDate = json['createDate'];
+    modifyDate = json['modifyDate'];
   }
 
   static List<QuestionModel> questionsFromJson(List<dynamic> questionsJson) {

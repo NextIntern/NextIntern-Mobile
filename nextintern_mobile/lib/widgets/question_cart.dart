@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:nextintern_mobile/models/answer_model.dart';
 import 'package:nextintern_mobile/models/question_model.dart';
 import 'package:nextintern_mobile/screens/answer_screen.dart';
 
 class QuestionCart extends StatelessWidget {
   final QuestionModel question;
+  final AnswerModel? answer;
 
-  const QuestionCart({Key? key, required this.question}) : super(key: key);
+  const QuestionCart({Key? key, required this.question, this.answer})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: question.status == true ? Colors.grey[200] : Colors.white,
+        color: question.status == true ? const Color(0xFFE0F7FA) : Colors.white,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -33,7 +36,7 @@ class QuestionCart extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    question.questions ?? 'No Question Text',
+                    question.question ?? 'No Question Text',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -45,22 +48,36 @@ class QuestionCart extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Published 3 minutes ago',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  Text(
+                    'Modified: ${question.modifyDate}',
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 8),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AnswerScreen(question: question),
-                  ),
-                );
+              onPressed: () async {
+                if (question.status == true) {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AnswerScreen(
+                        question: question,
+                        answer: answer,
+                      ),
+                    ),
+                  );
+                } else {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AnswerScreen(
+                        question: question,
+                      ),
+                    ),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
