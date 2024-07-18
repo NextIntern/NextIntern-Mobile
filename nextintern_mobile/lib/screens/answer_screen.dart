@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nextintern_mobile/models/answer_model.dart';
 import 'package:nextintern_mobile/models/question_model.dart';
+import 'package:nextintern_mobile/services/answer_service.dart';
 
 class AnswerScreen extends StatefulWidget {
   final QuestionModel question;
@@ -15,12 +16,14 @@ class AnswerScreen extends StatefulWidget {
 
 class _AnswerScreenState extends State<AnswerScreen> {
   final TextEditingController _answerController = TextEditingController();
+  int _rating = 0;
 
   @override
   void initState() {
     super.initState();
     if (widget.answer != null) {
       _answerController.text = widget.answer!.response ?? '';
+      _rating = widget.answer!.rating ?? 0;
     }
   }
 
@@ -29,15 +32,6 @@ class _AnswerScreenState extends State<AnswerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.answer != null ? 'Edit Answer' : 'Answer Question'),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF08F8B3), Color(0xFF4B39EF)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -47,74 +41,78 @@ class _AnswerScreenState extends State<AnswerScreen> {
             Text(
               widget.question.question ?? 'No Question Text',
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             TextField(
               controller: _answerController,
               maxLines: 5,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 labelText: 'Your Answer',
-                alignLabelWithHint: true,
-                filled: true,
-                fillColor: Colors.grey.shade200,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+            Slider(
+              value: _rating.toDouble(),
+              min: 0,
+              max: 5,
+              divisions: 5,
+              label: _rating.toString(),
+              onChanged: (double value) {
+                setState(() {
+                  _rating = value.toInt();
+                });
+              },
+            ),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (widget.answer != null) {
+                      // Gọi API cập nhật câu trả lời
+                      await AnswerService.updateAnswer(
+                        widget.answer!.campaignQuestionResponseId!,
+                        _answerController.text,
+                        _rating,
+                        context,
+                        widget.answer!
+                            .campaignQuestionId!, // Lấy campaignQuestionId từ answer
+                      );
                       print('Cập nhật câu trả lời: ${_answerController.text}');
                     } else {
+                      // Gọi API tạo câu trả lời mới
+                      await AnswerService.createAnswer(
+                        widget.question.campaignQuestionId!,
+                        _answerController.text,
+                        _rating,
+                        context,
+                      );
                       print('Tạo câu trả lời mới: ${_answerController.text}');
                     }
-                    Navigator.pop(context);
+                    FocusScope.of(context).unfocus();
+                    Navigator.pop(context, true);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green.shade500,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
                   ),
-                  child: Text(
-                    widget.answer != null ? 'Update Answer' : 'Submit Answer',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: Text(widget.answer != null
+                      ? 'Update Answer'
+                      : 'Submit Answer'),
                 ),
                 const SizedBox(width: 16),
                 ElevatedButton(
                   onPressed: () {
                     _answerController.clear();
+                    setState(() {
+                      _rating = 0;
+                    });
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade400,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Clear',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: const Text('Clear'),
                 ),
               ],
             ),

@@ -12,25 +12,33 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late ProfileModel _profile;
-  bool _isLoading = true; // Biến kiểm soát loading state
+  bool _isLoading = true;
+  Timer? _timer; // Lưu trữ Timer
 
   @override
   void initState() {
     super.initState();
-    // Delay 1 giây rồi cập nhật _isLoading và _profile
-    Timer(const Duration(seconds: 1), () {
-      setState(() {
-        _isLoading = false;
-        _profile = ProfileModel(
-          name: 'Lê Văn Dương',
-          age: 22,
-          occupation: 'Sinh viên',
-          location: 'Hà Nội',
-          skills: 'Flutter, Dart, Firebase',
-          languages: 'Tiếng Anh, Tiếng Việt',
-        );
-      });
+    _timer = Timer(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _profile = ProfileModel(
+            name: 'Nguyễn Văn A',
+            age: 22,
+            occupation: 'Sinh viên',
+            location: 'Hà Nội',
+            skills: 'Flutter, Dart, Firebase',
+            languages: 'Tiếng Anh, Tiếng Việt',
+          );
+        });
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Hủy Timer khi widget bị dispose
+    super.dispose();
   }
 
   @override

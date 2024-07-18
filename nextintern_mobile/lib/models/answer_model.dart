@@ -16,7 +16,12 @@ class AnswerModel {
   AnswerModel.fromJson(Map<String, dynamic> json) {
     campaignQuestionResponseId = json['campaignQuestionResponseId'];
     campaignQuestionId = json['campaignQuestionId'];
-    internId = json['internId'];
+    // Kiểm tra xem JSON có chứa internId hay không
+    if (json['internId'] != null) {
+      internId = json['internId']; // Lấy internId từ JSON
+    } else {
+      internId = "eda49f0d-c75e-46c4-a171-d77706e7017c"; // Gán giá trị mặc định
+    }
     response = json['response'];
     rating = json['rating'];
   }

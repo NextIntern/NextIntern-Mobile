@@ -15,18 +15,21 @@ class QuestionScreen extends StatefulWidget {
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late Future<List<QuestionModel>> _questionListFuture;
   late Future<List<AnswerModel>> _answerListFuture;
 
   @override
   void initState() {
     super.initState();
+    _loadQuestionsAndAnswers();
+    NotificationService.initializeNotifications();
+    _checkUnansweredQuestions();
+  }
+
+  Future<void> _loadQuestionsAndAnswers() async {
     _questionListFuture = QuestionService.getAllQuestions();
     _answerListFuture = AnswerService.getAllAnswers();
-
-    NotificationService.initializeNotifications();
-
-    _checkUnansweredQuestions();
   }
 
   Future<void> _checkUnansweredQuestions() async {
@@ -50,61 +53,71 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
-        child: GradientAppBar(
-          title: 'Question',
+    return WillPopScope(
+      // Bọc Scaffold bằng WillPopScope
+      onWillPop: () async {
+        _loadQuestionsAndAnswers(); // Reload dữ liệu khi back
+        return true; // Cho phép back
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: GradientAppBar(
+            title: 'Question',
+          ),
         ),
-      ),
-      body: FutureBuilder<List<QuestionModel>>(
-        future: _questionListFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            List<QuestionModel> questionList = snapshot.data!;
-            return FutureBuilder<List<AnswerModel>>(
-              future: _answerListFuture,
-              builder: (context, answerSnapshot) {
-                if (answerSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (answerSnapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (answerSnapshot.hasData) {
-                  List<AnswerModel> answerList = answerSnapshot.data!;
-                  return ListView.builder(
-                    itemCount: questionList.length,
-                    itemBuilder: (context, index) {
-                      final question = questionList[index];
-                      AnswerModel? correspondingAnswer;
+        body: FutureBuilder<List<QuestionModel>>(
+          future: _questionListFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              List<QuestionModel> questionList = snapshot.data!;
+              return FutureBuilder<List<AnswerModel>>(
+                future: _answerListFuture,
+                builder: (context, answerSnapshot) {
+                  if (answerSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (answerSnapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (answerSnapshot.hasData) {
+                    List<AnswerModel> answerList = answerSnapshot.data!;
+                    return ListView.builder(
+                      itemCount: questionList.length,
+                      itemBuilder: (context, index) {
+                        final question = questionList[index];
+                        AnswerModel? correspondingAnswer;
 
-                      if (answerSnapshot.hasData) {
-                        correspondingAnswer = answerSnapshot.data!.firstWhere(
-                          (answer) =>
-                              answer.campaignQuestionId ==
-                              question.campaignQuestionId,
-                          orElse: () => AnswerModel(),
+                        if (answerSnapshot.hasData) {
+                          correspondingAnswer = answerSnapshot.data!.firstWhere(
+                            (answer) =>
+                                answer.campaignQuestionId ==
+                                question.campaignQuestionId,
+                            orElse: () => AnswerModel(),
+                          );
+                        }
+
+                        return QuestionCart(
+                          question: question,
+                          answer: correspondingAnswer,
+                          scaffoldKey: _scaffoldKey,
                         );
-                      }
-
-                      return QuestionCart(
-                        question: question,
-                        answer: correspondingAnswer,
-                      );
-                    },
-                  );
-                } else {
-                  return const Center(child: Text('No answers found'));
-                }
-              },
-            );
-          } else {
-            return const Center(child: Text('No questions found'));
-          }
-        },
+                      },
+                    );
+                  } else {
+                    return const Center(child: Text('No answers found'));
+                  }
+                },
+              );
+            } else {
+              return const Center(child: Text('No questions found'));
+            }
+          },
+        ),
       ),
     );
   }

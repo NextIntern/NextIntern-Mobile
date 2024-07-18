@@ -23,10 +23,6 @@ class CriteriaCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
                 'Evaluate from Mentor: ${criteria.evaluateFromMentor ?? 'N/A'}'),
-            const SizedBox(height: 4),
-            Text('Started: ${criteria.start == true ? 'Yes' : 'No'}'),
-            const SizedBox(height: 4),
-            Text('Checked: ${criteria.isChecked == true ? 'Yes' : 'No'}'),
           ],
         ),
       ),

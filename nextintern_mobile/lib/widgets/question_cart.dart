@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:nextintern_mobile/models/answer_model.dart';
 import 'package:nextintern_mobile/models/question_model.dart';
 import 'package:nextintern_mobile/screens/answer_screen.dart';
-import 'package:intl/intl.dart'; // Import package intl
+import 'package:intl/intl.dart';
 
 class QuestionCart extends StatelessWidget {
   final QuestionModel question;
   final AnswerModel? answer;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const QuestionCart({Key? key, required this.question, this.answer})
+  const QuestionCart(
+      {Key? key,
+      required this.question,
+      this.answer,
+      required this.scaffoldKey})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Định dạng modifyDate, xử lý trường hợp null
     String formattedModifyDate = question.modifyDate != null
         ? DateFormat('dd/MM/yyyy').format(DateTime.parse(question.modifyDate!))
         : 'N/A';
@@ -36,8 +40,11 @@ class QuestionCart extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            const Icon(Icons.question_answer,
-                color: Colors.blueAccent, size: 32),
+            const Icon(
+              Icons.question_answer,
+              color: Colors.blueAccent,
+              size: 32,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -65,16 +72,19 @@ class QuestionCart extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             ElevatedButton(
-              onPressed: () async {
-                await Navigator.push(
+              onPressed: () {
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => AnswerScreen(
                       question: question,
-                      answer: answer,
+                      answer: question.status == true ? answer : null,
                     ),
                   ),
-                );
+                ).then((_) {
+                  // Gọi setState của QuestionScreen
+                  scaffoldKey.currentState?.setState(() {});
+                });
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
