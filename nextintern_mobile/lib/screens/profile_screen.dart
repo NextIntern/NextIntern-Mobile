@@ -23,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         setState(() {
           _isLoading = false;
           _profile = ProfileModel(
-            name: 'Nguyễn Văn A',
+            name: 'Lê Văn Dương',
             age: 22,
             occupation: 'Sinh viên',
             location: 'Hà Nội',

@@ -55,18 +55,6 @@ class _AnswerScreenState extends State<AnswerScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Slider(
-              value: _rating.toDouble(),
-              min: 0,
-              max: 5,
-              divisions: 5,
-              label: _rating.toString(),
-              onChanged: (double value) {
-                setState(() {
-                  _rating = value.toInt();
-                });
-              },
-            ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -78,7 +66,7 @@ class _AnswerScreenState extends State<AnswerScreen> {
                       await AnswerService.updateAnswer(
                         widget.answer!.campaignQuestionResponseId!,
                         _answerController.text,
-                        _rating,
+                        5,
                         context,
                         widget.answer!
                             .campaignQuestionId!, // Lấy campaignQuestionId từ answer
@@ -89,7 +77,7 @@ class _AnswerScreenState extends State<AnswerScreen> {
                       await AnswerService.createAnswer(
                         widget.question.campaignQuestionId!,
                         _answerController.text,
-                        _rating,
+                        5,
                         context,
                       );
                       print('Tạo câu trả lời mới: ${_answerController.text}');
